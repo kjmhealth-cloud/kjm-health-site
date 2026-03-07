@@ -937,19 +937,25 @@ export default function Home() {
           >
             {/* Warm Gold Background Wash */}
             <div
-              className="absolute top-1/2 left-1/2 lg:left-auto lg:right-[8%] -translate-x-1/2 lg:translate-x-0 -translate-y-1/2 w-[300px] md:w-[420px] h-[300px] md:h-[420px] rounded-full pointer-events-none z-0"
+              className="gold-haze-animate absolute top-1/2 left-1/2 lg:left-auto lg:right-[8%] -translate-x-1/2 lg:translate-x-0 -translate-y-1/2 w-[320px] md:w-[420px] h-[320px] md:h-[420px] rounded-full pointer-events-none z-0"
               style={{
                 background: "radial-gradient(circle, rgba(197,160,89,0.20) 0%, rgba(212,181,119,0.12) 40%, transparent 70%)",
                 filter: "blur(80px)",
               }}
             />
 
+            {/* Gold Border Ring (behind the blob) */}
+            <div
+              className="blob-mask absolute top-1/2 left-1/2 lg:left-auto lg:right-[calc(8%+10px)] -translate-x-1/2 lg:translate-x-0 -translate-y-1/2 w-[252px] md:w-[292px] h-[292px] md:h-[332px] pointer-events-none z-10"
+              style={{
+                background: "linear-gradient(135deg, rgba(197,160,89,0.25), rgba(197,160,89,0.05))",
+                filter: "blur(2px)",
+              }}
+            />
+
             {/* Headshot Image in Organic Blob */}
             <div
-              className="blob-mask relative w-[240px] md:w-[280px] h-[280px] md:h-[320px] overflow-hidden shrink-0 z-10"
-              style={{
-                boxShadow: "0 0 0 6px rgba(197,160,89,0.15)",
-              }}
+              className="blob-mask relative w-[240px] md:w-[280px] h-[280px] md:h-[320px] overflow-hidden shrink-0 z-20"
             >
               <img
                 src="/kyle-headshot.jpg"
