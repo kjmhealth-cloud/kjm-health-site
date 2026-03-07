@@ -93,7 +93,7 @@ const staggerItem = {
 
 /* Word-by-word cinematic headline reveal */
 const headlineWords = ["Expert", "Insurance", "Advice", "from", "Someone", "Who"];
-const headlineGoldWords = ["Actually", "Answers", "the", "Phone."];
+const headlineAccentWords = ["Actually", "Answers", "the", "Phone."];
 
 const wordVariant = {
   hidden: { opacity: 0, y: 20, filter: "blur(4px)" },
@@ -133,7 +133,7 @@ const trustBadges = [
   },
   {
     icon: "⚖️",
-    title: "100% Independent",
+    title: "Broker — Access to Multiple Carriers",
     description: "No carrier owns me. I answer to you.",
   },
   {
@@ -822,14 +822,14 @@ export default function Home() {
                 </motion.span>
               ))}
               <br className="hidden md:block" />
-              {headlineGoldWords.map((word, i) => (
+              {headlineAccentWords.map((word, i) => (
                 <motion.span
                   key={word}
                   variants={wordVariant}
                   initial="hidden"
                   animate="visible"
                   custom={headlineWords.length + i}
-                  className="inline-block mr-[0.3em] text-[var(--gold)]"
+                  className="inline-block mr-[0.3em] text-[#1A233A] bg-[rgba(197,160,89,0.12)] px-1 rounded"
                 >
                   {word}
                 </motion.span>
@@ -841,13 +841,10 @@ export default function Home() {
               initial="hidden"
               animate="visible"
               custom={0.7}
-              className="text-lg md:text-xl leading-relaxed max-w-2xl mx-auto lg:mx-0 text-[var(--slate)]"
+              className="text-lg md:text-xl leading-relaxed max-w-2xl mx-auto lg:mx-0 text-[#333333]"
             >
-              I&rsquo;m Kyle Miller &mdash; a licensed, independent health
-              insurance broker working across 30+ states. I sit down with
-              families like yours every day, learn what matters most to you,
-              and find the coverage that actually fits. No pressure, no
-              upsell, no surprises. Just honest guidance from someone
+              Licensed, independent health insurance broker covering 30+
+              states. Honest guidance, zero pressure &mdash; from someone
               who picks up the phone.
             </motion.p>
 
@@ -877,20 +874,16 @@ export default function Home() {
               initial="hidden"
               animate="visible"
               custom={0.9}
-              className="hero-inline-form mt-6 bg-white/50 p-6 rounded-2xl border border-[var(--slate)]/20"
+              className="hero-inline-form mt-6 bg-white/50 p-4 rounded-2xl border border-[var(--slate)]/20"
             >
-              <span className="block text-sm font-medium text-[var(--ink)] mb-4">
-                Enter your zip code below. It takes 60 seconds, and I will
-                personally call you back&mdash;no robots.
-              </span>
-              <div className="flex flex-col sm:flex-row gap-4">
+              <div className="flex flex-col sm:flex-row gap-3">
                 <input
                   type="text"
                   inputMode="numeric"
                   pattern="[0-9]{5}"
                   maxLength={5}
-                  placeholder="Enter your zip code"
-                  className="flex-1 px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[var(--gold)] focus:outline-none text-lg"
+                  placeholder="Enter Zip Code"
+                  className="flex-1 h-12 px-4 rounded-full border border-gray-300 focus:ring-2 focus:ring-[var(--gold)] focus:outline-none text-lg"
                   aria-label="Zip code"
                   value={zipCode}
                   onChange={(e) => setZipCode(e.target.value.replace(/\D/g, ""))}
@@ -898,7 +891,7 @@ export default function Home() {
                 />
                 <motion.button
                   type="button"
-                  className="btn-cta bg-[var(--gold)] text-[var(--ink)] px-8 py-3 rounded-xl font-bold text-lg hover:bg-yellow-500 transition-colors whitespace-nowrap disabled:opacity-50"
+                  className="btn-cta h-12 whitespace-nowrap disabled:opacity-50"
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={handleHeroSubmit}
@@ -908,21 +901,12 @@ export default function Home() {
                 </motion.button>
               </div>
 
-              {/* Compliance disclaimers */}
-              <div className="mt-6 text-xs text-gray-500 text-left">
-                <span className="block font-semibold mb-2">
-                  🔒 256-Bit Secure. Zero Spam Guarantee.
-                </span>
-                <p className="leading-tight">
-                  Your info stays with me. Never sold. Never shared. Never fed
-                  into an auto-dialer. By submitting, you agree to be contacted
-                  by Kyle Miller of KJM Health. You consent to receive calls and
-                  text messages regarding your insurance inquiry. Consent is not
-                  a condition of purchase. View our{" "}
-                  <Link href="/privacy" className="underline hover:text-[var(--gold)]">Privacy Policy</Link>{" "}
-                  and{" "}
-                  <Link href="/terms" className="underline hover:text-[var(--gold)]">Terms of Service</Link>.
-                </p>
+              {/* Compact compliance line */}
+              <div className="mt-3 text-xs text-[#6B7280] text-center sm:text-left">
+                🔒 Secure &amp; Private ·{" "}
+                <Link href="/privacy" className="underline hover:text-[var(--gold)]">Privacy Policy</Link>{" "}
+                ·{" "}
+                <Link href="/terms" className="underline hover:text-[var(--gold)]">Terms</Link>
               </div>
             </motion.div>
           </div>
