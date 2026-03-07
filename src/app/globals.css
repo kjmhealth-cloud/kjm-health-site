@@ -1907,6 +1907,33 @@ p {
     display: none;
   }
 
+  .site-header {
+    padding: 0 16px;
+  }
+
+  .site-header-inner {
+    height: 56px;
+  }
+
+  .header-logo {
+    font-size: 16px;
+    gap: 6px;
+  }
+
+  .header-logo-mark {
+    width: 26px;
+    height: 26px;
+    font-size: 12px;
+    border-radius: 6px;
+  }
+
+  .btn-header-cta {
+    font-size: 11px;
+    padding: 8px 14px;
+    white-space: nowrap;
+    letter-spacing: 0.06em;
+  }
+
   h1 {
     font-size: 36px;
   }

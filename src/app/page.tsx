@@ -859,10 +859,10 @@ export default function Home() {
                 <motion.div
                   key={badge.title}
                   variants={badgeItem}
-                  className="flex items-center gap-3"
+                  className="flex flex-row items-center gap-2"
                 >
-                  <span className="text-2xl leading-none">{badge.icon}</span>
-                  <span className="font-semibold text-sm md:text-base text-[var(--ink)] whitespace-nowrap">
+                  <span className="text-xl leading-none shrink-0">{badge.icon}</span>
+                  <span className="font-semibold text-sm text-[var(--ink)] whitespace-nowrap">
                     {badge.title}
                   </span>
                 </motion.div>
