@@ -853,7 +853,7 @@ export default function Home() {
               variants={badgeContainer}
               initial="hidden"
               animate="visible"
-              className="flex flex-col sm:flex-row flex-wrap justify-center lg:justify-start items-center gap-6 mt-4"
+              className="flex flex-row flex-wrap justify-center lg:justify-start items-center gap-x-6 gap-y-3 mt-4"
             >
               {trustBadges.map((badge) => (
                 <motion.div
