@@ -802,11 +802,13 @@ export default function Home() {
       {/* ═══════════════════════════════════════
           SECTION 1 — HERO
           ═══════════════════════════════════════ */}
-      <section className="hero-section">
-        <div className="hero-grid">
-          <div style={{ display: "flex", flexDirection: "column", gap: 32 }}>
+      <section className="hero-section px-6 md:px-12 pt-24 pb-16 max-w-7xl mx-auto">
+        <div className="flex flex-col-reverse lg:flex-row items-center justify-between gap-12 lg:gap-20">
+
+          {/* Left Side: Text and Form */}
+          <div className="flex flex-col gap-8 w-full lg:w-3/5 text-center lg:text-left">
             {/* Cinematic word-by-word headline */}
-            <h1 style={{ textWrap: "balance" }}>
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight" style={{ textWrap: "balance" }}>
               {headlineWords.map((word, i) => (
                 <motion.span
                   key={word}
@@ -814,12 +816,12 @@ export default function Home() {
                   initial="hidden"
                   animate="visible"
                   custom={i}
-                  style={{ display: "inline-block", marginRight: "0.3em" }}
+                  className="inline-block mr-[0.3em]"
                 >
                   {word}
                 </motion.span>
               ))}
-              <br />
+              <br className="hidden md:block" />
               {headlineGoldWords.map((word, i) => (
                 <motion.span
                   key={word}
@@ -827,11 +829,7 @@ export default function Home() {
                   initial="hidden"
                   animate="visible"
                   custom={headlineWords.length + i}
-                  style={{
-                    display: "inline-block",
-                    marginRight: "0.3em",
-                    color: "var(--gold)",
-                  }}
+                  className="inline-block mr-[0.3em] text-[var(--gold)]"
                 >
                   {word}
                 </motion.span>
@@ -843,12 +841,7 @@ export default function Home() {
               initial="hidden"
               animate="visible"
               custom={0.7}
-              style={{
-                fontSize: 18,
-                lineHeight: 1.7,
-                maxWidth: 540,
-                color: "var(--slate)",
-              }}
+              className="text-lg md:text-xl leading-relaxed max-w-2xl mx-auto lg:mx-0 text-[var(--slate)]"
             >
               I&rsquo;m Kyle Miller &mdash; a licensed, independent health
               insurance broker working across 30+ states. I sit down with
@@ -858,52 +851,21 @@ export default function Home() {
               who picks up the phone.
             </motion.p>
 
-            {/* Primary CTA */}
-            <motion.a
-              href="#quote"
-              variants={fadeUp}
-              initial="hidden"
-              animate="visible"
-              custom={0.8}
-              className="btn-header-cta"
-              style={{
-                fontSize: 17,
-                padding: "16px 40px",
-                borderRadius: 12,
-                width: "fit-content",
-                boxShadow: "0 2px 12px rgba(197, 160, 89, 0.2)",
-              }}
-            >
-              Get My Free Quote
-            </motion.a>
-
-            {/* Horizontal Trust Bar */}
+            {/* Horizontal Trust Bar (Wraps on mobile) */}
             <motion.div
               variants={badgeContainer}
               initial="hidden"
               animate="visible"
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "space-between",
-                alignItems: "center",
-                width: "100%",
-                marginTop: 32,
-                gap: 16,
-              }}
+              className="flex flex-col sm:flex-row flex-wrap justify-center lg:justify-start items-center gap-6 mt-4"
             >
               {trustBadges.map((badge) => (
                 <motion.div
                   key={badge.title}
                   variants={badgeItem}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 10,
-                  }}
+                  className="flex items-center gap-3"
                 >
-                  <span style={{ fontSize: 22, lineHeight: 1 }}>{badge.icon}</span>
-                  <span style={{ fontWeight: 600, fontSize: 14, color: "var(--ink)", whiteSpace: "nowrap" }}>
+                  <span className="text-2xl leading-none">{badge.icon}</span>
+                  <span className="font-semibold text-sm md:text-base text-[var(--ink)] whitespace-nowrap">
                     {badge.title}
                   </span>
                 </motion.div>
@@ -915,20 +877,20 @@ export default function Home() {
               initial="hidden"
               animate="visible"
               custom={0.9}
-              className="hero-inline-form"
+              className="hero-inline-form mt-6 bg-white/50 p-6 rounded-2xl border border-[var(--slate)]/20"
             >
-              <span className="hero-form-note">
+              <span className="block text-sm font-medium text-[var(--ink)] mb-4">
                 Enter your zip code below. It takes 60 seconds, and I will
                 personally call you back&mdash;no robots.
               </span>
-              <div className="hero-form-row">
+              <div className="flex flex-col sm:flex-row gap-4">
                 <input
                   type="text"
                   inputMode="numeric"
                   pattern="[0-9]{5}"
                   maxLength={5}
                   placeholder="Enter your zip code"
-                  className="hero-form-input"
+                  className="flex-1 px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[var(--gold)] focus:outline-none text-lg"
                   aria-label="Zip code"
                   value={zipCode}
                   onChange={(e) => setZipCode(e.target.value.replace(/\D/g, ""))}
@@ -936,7 +898,7 @@ export default function Home() {
                 />
                 <motion.button
                   type="button"
-                  className="btn-cta hero-form-btn"
+                  className="btn-cta bg-[var(--gold)] text-[var(--ink)] px-8 py-3 rounded-xl font-bold text-lg hover:bg-yellow-500 transition-colors whitespace-nowrap disabled:opacity-50"
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={handleHeroSubmit}
@@ -946,89 +908,53 @@ export default function Home() {
                 </motion.button>
               </div>
 
-              {/* Compliance disclaimers — mirrored from bottom form */}
-              <div className="hero-form-consent">
-                <span className="form-trust-anchor">
+              {/* Compliance disclaimers */}
+              <div className="mt-6 text-xs text-gray-500 text-left">
+                <span className="block font-semibold mb-2">
                   🔒 256-Bit Secure. Zero Spam Guarantee.
                 </span>
-                <p className="form-legal">
+                <p className="leading-tight">
                   Your info stays with me. Never sold. Never shared. Never fed
                   into an auto-dialer. By submitting, you agree to be contacted
                   by Kyle Miller of KJM Health. You consent to receive calls and
                   text messages regarding your insurance inquiry. Consent is not
                   a condition of purchase. View our{" "}
-                  <Link href="/privacy" className="consent-link">Privacy Policy</Link>{" "}
+                  <Link href="/privacy" className="underline hover:text-[var(--gold)]">Privacy Policy</Link>{" "}
                   and{" "}
-                  <Link href="/terms" className="consent-link">Terms of Service</Link>.
+                  <Link href="/terms" className="underline hover:text-[var(--gold)]">Terms of Service</Link>.
                 </p>
               </div>
             </motion.div>
           </div>
 
-          {/* Professional Headshot — Alpine Fluidity Organic Mask */}
+          {/* Right Side: Professional Headshot */}
           <motion.div
             variants={fadeUp}
             initial="hidden"
             animate="visible"
             custom={0.5}
-            className="headshot-area"
-            style={{ position: "relative" }}
+            className="relative w-full lg:w-2/5 flex justify-center lg:justify-end mt-12 lg:mt-0"
           >
             {/* Warm Gold Background Wash */}
             <div
-              className="gold-haze-animate"
+              className="absolute top-1/2 left-1/2 lg:left-auto lg:right-[8%] -translate-x-1/2 lg:translate-x-0 -translate-y-1/2 w-[300px] md:w-[420px] h-[300px] md:h-[420px] rounded-full pointer-events-none z-0"
               style={{
-                position: "absolute",
-                top: "50%",
-                right: "8%",
-                transform: "translateY(-50%)",
-                width: 420,
-                height: 420,
-                borderRadius: "9999px",
-                background:
-                  "radial-gradient(circle, rgba(197,160,89,0.20) 0%, rgba(212,181,119,0.12) 40%, transparent 70%)",
+                background: "radial-gradient(circle, rgba(197,160,89,0.20) 0%, rgba(212,181,119,0.12) 40%, transparent 70%)",
                 filter: "blur(80px)",
-                pointerEvents: "none",
-                zIndex: 0,
-              }}
-            />
-
-            {/* Gold Border Ring (behind the blob) */}
-            <div
-              className="blob-mask"
-              style={{
-                position: "absolute",
-                inset: -6,
-                background:
-                  "linear-gradient(135deg, rgba(197,160,89,0.25), rgba(197,160,89,0.05))",
-                filter: "blur(2px)",
-                pointerEvents: "none",
-                zIndex: 1,
               }}
             />
 
             {/* Headshot Image in Organic Blob */}
             <div
-              className="blob-mask"
+              className="blob-mask relative w-[240px] md:w-[280px] h-[280px] md:h-[320px] overflow-hidden shrink-0 z-10"
               style={{
-                position: "relative",
-                width: 280,
-                height: 320,
-                overflow: "hidden",
-                flexShrink: 0,
-                zIndex: 2,
+                boxShadow: "0 0 0 6px rgba(197,160,89,0.15)",
               }}
             >
               <img
                 src="/kyle-headshot.jpg"
                 alt="Kyle Miller — Licensed Independent Health Insurance Broker"
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  objectFit: "cover",
-                  objectPosition: "top",
-                  transform: "scale(1.05)",
-                }}
+                className="w-full h-full object-cover object-top scale-105"
                 loading="eager"
               />
             </div>
