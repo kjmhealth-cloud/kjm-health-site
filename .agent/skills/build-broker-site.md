@@ -4,7 +4,7 @@ description: Build a high-converting, single-page insurance broker lead-generati
 
 # /build-broker-site — Alpine Fluidity Broker Site Skill
 
-> **Purpose:** Rapidly scaffold a production-ready, single-page insurance broker lead-generation website using the exact architecture, design tokens, DOM structure, animation system, and API pipeline proven in the KyleCoverage V1 build.
+> **Purpose:** Rapidly scaffold a production-ready, single-page insurance broker lead-generation website using the exact architecture, design tokens, DOM structure, animation system, TCPA compliance funnel, and Zapier webhook pipeline proven in the KyleCoverage V1/V2 build.
 
 ---
 
@@ -119,19 +119,89 @@ All tokens are defined in **two layers** inside `globals.css`:
 
 ---
 
-## 2 · Shared Animation Variants (Framer Motion)
+## 2 · WCAG AAA Button System (MANDATORY)
 
-Define these at the **top of `page.tsx`**, above all components. Every animation in the page draws from this shared library.
+> [!CAUTION]
+> **ALL CTA buttons MUST use Dark Navy (#1A233A) text on gold backgrounds.** White text on gold fails WCAG AA (1.87:1 ratio). Navy on gold = 7.2:1 (passes AAA). This is the single highest-impact conversion and accessibility rule.
 
-### 2A · Core Easing Curve
+### 2A · `.btn-header-cta` (Nav CTA)
+
+```css
+.btn-header-cta {
+  background: var(--gold);
+  color: #1A233A;                                    /* ← DARK text, NEVER white */
+  font-weight: 700;
+  font-size: 14px;
+  padding: 10px 24px;
+  border-radius: 100px;                              /* ← Full pill shape */
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 1px 3px rgba(212,175,55,0.2), 0 4px 12px rgba(212,175,55,0.15);
+}
+
+.btn-header-cta:hover {
+  background: var(--gold-hover);
+  transform: translateY(-2px);
+  box-shadow:
+    0 0 22px rgba(197,160,89,0.25),                  /* ← Gold glow pulse */
+    0 0 6px rgba(197,160,89,0.12),
+    0 4px 12px rgba(212,175,55,0.3);
+}
+```
+
+### 2B · `.btn-cta` (Hero / Section CTA)
+
+```css
+.btn-cta {
+  background: var(--gold);
+  color: #1A233A;                                    /* ← DARK text, NEVER white */
+  font-weight: 700;
+  font-size: 15px;
+  padding: 16px 40px;
+  border-radius: 100px;                              /* ← Full pill shape */
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 12px rgba(212,175,55,0.25);
+}
+
+.btn-cta:hover {
+  background: var(--gold-hover);
+  transform: translateY(-2px);
+  box-shadow:
+    0 0 22px rgba(197,160,89,0.25),
+    0 0 6px rgba(197,160,89,0.12),
+    0 6px 20px rgba(212,175,55,0.35);
+}
+```
+
+### 2C · Button Rules (Non-Negotiable)
+
+| Property | Value | Why |
+|---|---|---|
+| `color` | `#1A233A` | WCAG AAA (7.2:1 on gold) |
+| `border-radius` | `100px` | Full pill per brand spec |
+| `text-transform` | `uppercase` | CTA prominence |
+| `letter-spacing` | `0.08em` | Readability at uppercase |
+| Hover `box-shadow` | Gold glow + translateY(-2px) | Micro-interaction lift |
+| `transition` | `all 0.25s cubic-bezier(0.4, 0, 0.2, 1)` | Premium feel |
+
+---
+
+## 3 · Shared Animation Variants (Framer Motion)
+
+Define these at the **top of `page.tsx`**, above all components.
+
+### 3A · Core Easing Curve
 
 ```
 [0.25, 0.46, 0.45, 0.94] as const
 ```
 
-This is the **only** easing curve used across the entire site. Always declare it with `as const` to satisfy TypeScript's `Variants` type.
+This is the **only** easing curve used. Always declare with `as const` for TypeScript.
 
-### 2B · Required Variants
+### 3B · Required Variants
 
 | Variant Name | Usage | Behavior |
 |---|---|---|
@@ -143,7 +213,7 @@ This is the **only** easing curve used across the entire site. Always declare it
 | `staggerItem` | Each card in a grid | `y: 40 → 0`, opacity |
 | `stepSlide` | Step animation | `x: -20 → 0`, opacity |
 
-### 2C · `FadeInOnScroll` Utility Component
+### 3C · `FadeInOnScroll` Utility Component
 
 ```tsx
 const FadeInOnScroll = ({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) => (
@@ -162,16 +232,16 @@ Use `FadeInOnScroll` to wrap **every section headline, kicker, body block, and C
 
 ---
 
-## 3 · DOM Blueprint — Section Architecture
+## 4 · DOM Blueprint — Section Architecture
 
-The page is a **single `page.tsx`** file (`"use client"`) composed of exactly 7 sections rendered in this order:
+The page is a **single `page.tsx`** file (`"use client"`) composed of exactly 7 sections:
 
 ```
 ┌────────────────────────────────────────────────┐
 │  HEADER — Glassmorphic Sticky Nav              │
 ├────────────────────────────────────────────────┤
-│  §1  HERO — 2-column grid                     │
-│      Left: headline + subhead + CTA + trust    │
+│  §1  HERO — responsive flex layout             │
+│      Left: headline + subhead + badges + form   │
 │      Right: blob-masked headshot               │
 ├────────────────────────────────────────────────┤
 │  §1b TRUST PROOF BAR — infinite marquee        │
@@ -194,346 +264,193 @@ The page is a **single `page.tsx`** file (`"use client"`) composed of exactly 7 
 
 ### §HEADER — Glassmorphic Sticky Header
 
-```
-<header class="site-header">
-  <div class="site-header-inner">          ← max-width: 1120px, flex row
-    <a class="header-logo">                ← serif font, icon mark square
-    <nav class="header-nav">               ← 3 anchor links: Meet X, The Process, FAQs
-    <a class="btn-header-cta" href="#quote">← Gold CTA pill
-  </div>
-</header>
-```
-
 **Rules:**
 - `position: fixed; top: 0;` with `z-index: 1000`
 - Background: `rgba(255,255,255,0.72)` + `backdrop-filter: saturate(180%) blur(20px)`
-- Border-bottom: `1px solid rgba(226,228,233,0.5)`
-- Height: `64px`
+- Height: `64px` desktop, `56px` mobile
 - Nav links get a gold underline on hover via `::after` pseudo-element
+- CTA uses `.btn-header-cta` (pill, navy text, uppercase)
+
+**Mobile (≤768px):**
+```css
+.header-nav { display: none; }
+.site-header { padding: 0 16px; }
+.site-header-inner { height: 56px; }
+.header-logo { font-size: 16px; gap: 6px; }
+.header-logo-mark { width: 26px; height: 26px; font-size: 12px; }
+.btn-header-cta { font-size: 11px; padding: 8px 14px; white-space: nowrap; }
+```
 
 ---
 
-### §1 · HERO Section
+### §1 · HERO Section (Responsive Flex Layout)
 
-**Container:** `.hero-section` — full viewport height, white bg, `padding-top: 64px` for fixed header offset.
+> [!IMPORTANT]
+> The hero uses **responsive Tailwind flex classes**, NOT CSS Grid. This is the V2 architecture.
 
-**Background Effects:**
-1. Finance grid pattern via `::before` pseudo-element with `mask-image: radial-gradient(ellipse 80% 60%…)`
-2. Radial gold glow via `::after` pseudo-element
+**Container CSS:** `.hero-section` — full viewport height, white bg, `padding-top: clamp(80px, 8vh, 120px)` for fixed header offset.
 
-**Grid:** `.hero-grid` — `grid-template-columns: 1fr 1fr`, gap 64px, max-width 1120px.
+**Layout:** `flex flex-col-reverse lg:flex-row` — text stacks above headshot on mobile, side-by-side on desktop.
+
+```tsx
+<section className="hero-section px-6 md:px-12 pt-24 pb-16 max-w-7xl mx-auto">
+  <div className="flex flex-col-reverse lg:flex-row items-center justify-between gap-12 lg:gap-20">
+    {/* Left: Text + Form (lg:w-3/5) */}
+    {/* Right: Headshot (lg:w-2/5) */}
+  </div>
+</section>
+```
 
 **Left Column (top to bottom):**
-1. **Cinematic Headline** — word-by-word reveal using `wordVariant`. White words in line 1, gold `var(--gold)` words in line 2 after `<br>`.
-2. **Subhead paragraph** — `fadeUp` variant, `custom={0.7}`.
-3. **Primary CTA button** — `<a href="#quote">`, gold background, `btn-header-cta` styles.
-4. **Horizontal Trust Bar** — 3 emoji+text badges in a flex row.
-5. **Inline Zip Code Form** — Input + button in a rounded pill container (`.hero-form-row`).
-6. **Compliance disclaimers** — Trust anchor + legal micro-copy + Privacy/Terms links.
+
+1. **Cinematic Headline** — word-by-word reveal using `wordVariant`. Line 1 uses normal color ( `text-[var(--ink)]`). Line 2 accent words use **Deep Navy text with gold-tinted background highlight**: `text-[#1A233A] bg-[rgba(197,160,89,0.12)] px-1 rounded` — NOT gold text (fails WCAG AA).
+2. **Subhead paragraph** — **Maximum 2 sentences.** Punchy, benefit-driven. Body text color: `text-[#333333]`.
+3. **Trust Badges** — 3 emoji+text badges in `flex flex-row flex-wrap`. Each badge: `flex flex-row items-center gap-2`, icon gets `shrink-0`, text gets `whitespace-nowrap`. Default badge: `"Broker — Access to Multiple Carriers"` (not "100% Independent" — industry jargon).
+4. **Inline Zip Code Form** — Compact card (`bg-white/50 p-4 rounded-2xl border`). Input + button side-by-side on desktop (`flex-col sm:flex-row gap-3`), both `h-12` for matched height. Input uses `rounded-full`. Button uses `.btn-cta h-12`. **NO instruction text** — the placeholder "Enter Zip Code" is sufficient.
+5. **Compact Compliance Line** — `🔒 Secure & Private · Privacy Policy · Terms` — that's it. **NO full legal disclaimer in the hero.** The full TCPA text lives ONLY on Step 3 of the bottom form where the phone number is collected.
 
 **Right Column:**
-- **Blob-Masked Headshot** — The `.blob-mask` class applies `border-radius: 60% 40% 55% 45% / 50% 60% 40% 50%` to create the organic shape.
-- Behind the image: a gold radial gradient circle with `animation: gentle-drift 8s ease-in-out infinite` for a living, breathing glow.
-- A gold border ring sits behind the blob at `inset: -6px`.
+- Organic blob-masked headshot using `.blob-mask` class
+- Gold radial gradient wash with `gold-haze-animate` class (8s gentle-drift keyframe)
+- Gold border ring blob behind the headshot at `z-10`
+- Headshot at `z-20` with responsive sizing: `w-[240px] md:w-[280px] h-[280px] md:h-[320px]`
 
 ---
 
 ### §1b · Trust Proof Bar (Marquee)
 
-```
-<section class="trust-proof-section">        ← bg: var(--ink), dark bar
-  <div class="trust-proof-marquee">          ← mask-image fade on edges
-    <motion.div class="trust-proof-track">   ← animate: x: ["0%", "-50%"], 25s linear infinite
-      {items} + {cloned items for seamless loop}
-    </motion.div>
-  </div>
-</section>
-```
-
-**Rules:**
-- Items: emoji icon + uppercase label, `font-size: 13px`, `letter-spacing: 0.08em`
-- Clone the item set inside `<div aria-hidden="true" style={{ display: "contents" }}>` for infinite scroll
+- Dark bar (`bg: var(--ink)`), items scroll infinitely
+- Clone item set inside `<div aria-hidden="true" style={{ display: "contents" }}>` for seamless loop
 - Edge fade: `mask-image: linear-gradient(90deg, transparent, black 6%, black 94%, transparent)`
-
----
 
 ### §1c · Carrier Cloud (Logo Grid)
 
-```
-<section class="carrier-cloud-section">     ← bg: var(--brand-cream)
-  <span class="carrier-cloud-label">        ← centered uppercase kicker
-  <div class="carrier-logo-grid">           ← responsive grid: 2→3→4→5 columns
-    {logos in .carrier-logo-tile}            ← glassmorphic tiles, grayscale → color on hover
-  </div>
-  <p class="carrier-more-text">+ More...</p>
-</section>
-```
-
-**Rules:**
-- Logo images get Tailwind utility classes: `grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all duration-300`
-- Tiles: `border-radius: 14px`, glass bg, `hover: scale(1.03)` + gold border accent
-- Responsive: `repeat(2,1fr)` → `repeat(3,1fr)` @640 → `repeat(4,1fr)` @768 → `repeat(5,1fr)` @1024
-
----
+- Responsive grid: `repeat(2,1fr)` → `repeat(3,1fr)` @640 → `repeat(4,1fr)` @768 → `repeat(5,1fr)` @1024
+- Logos: `grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all duration-300`
+- Tiles: glassmorphic, `hover: scale(1.03)` + gold border accent
 
 ### §3 · Authority & Trust Section
 
-**Structure:**
-1. **Kicker** — `<span class="kicker">MEET YOUR BROKER</span>`, gold uppercase
-2. **Section headline** — white + gold second line
-3. **Trust Cards Grid** — `.trust-cards-grid` = `grid-template-columns: 1fr 1fr`, each card is `.glass-card`
-4. **Transparency Block** — dark navy (`var(--ink)`) rounded box explaining broker compensation
-5. **Testimonial Marquee** — infinite horizontal scroll, same pattern as trust proof bar but with full `.testimonial-card` components
-
-**Glass Card Pattern:**
-```css
-.glass-card {
-  background: rgba(255, 255, 255, 0.78);
-  backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  border-radius: 20px;
-  padding: 40px;
-  /* hover: translateY(-4px) + gold border accent */
-}
-```
-
-Each card has: Lucide icon (gold, 28px) → h3 title → p body.
-
----
+- Kicker → Section headline → Glass card grid (2-col) → Transparency block → Testimonial marquee
+- Glass cards: `backdrop-filter: blur(20px)`, hover `translateY(-4px)` + gold border
 
 ### §4 · How It Works — 3-Column Process Timeline
 
-**This is the signature layout.** Must be reproduced exactly.
-
-```
-<section class="section-process" style={{ background: "#FAF9F6" }}>
-  <div class="section-container">
-    <span>THE PROCESS</span>      ← uppercase kicker
-    <h2>Three Simple Steps…</h2>  ← centered
-    <p>Subtitle</p>               ← centered, muted
-
-    <motion.div class="process-timeline">    ← 3-col grid @768px+
-      {steps.map → <motion.div class="af-process-card">}
-    </motion.div>
-
-    <a class="btn-cta">Start My Free Quote →</a>
-  </div>
-</section>
-```
-
-**Process Card Anatomy (`.af-process-card`):**
-1. `.af-step-badge` — gold gradient circle with step number
-2. `.af-icon-box` — icon container, transitions to gold on hover
-3. `.af-card-title` — 18px, weight 600
-4. `.af-card-desc` — muted body text, max-width 260px
-5. `.af-card-tag` — gold inline badge (e.g. "⏱️ Literally 30 seconds.")
-
-**Timeline Connector:**
-- Desktop (@768px+): horizontal gold gradient line at `top: 88px` via `::before`
-- Mobile: vertical gold gradient line at `left: 50%` via `::before`
-
----
+- 3 step cards with gold gradient badge number, icon box, title, description, and tag badge
+- Timeline connector: horizontal gold gradient line on desktop, vertical on mobile
 
 ### §5 · FAQ Accordion
 
-**Component:** `FAQAccordion` — state: `useState<number | null>(null)` for open index.
-
-```tsx
-<div class="faq-list">
-  {faqs.map((faq, i) => (
-    <FadeInOnScroll key={i} delay={i * 0.06}>
-      <div class="faq-item">
-        <button class="faq-question" onClick={toggle}>
-          <span>{faq.q}</span>
-          <motion.span animate={{ rotate: isOpen ? 180 : 0 }}>
-            <ChevronDown />
-          </motion.span>
-        </button>
-        <AnimatePresence initial={false}>
-          {isOpen && (
-            <motion.div initial/animate/exit height + opacity>
-              <div class="faq-answer">{faq.a}</div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-    </FadeInOnScroll>
-  ))}
-</div>
-```
-
-**Rules:**
+- `useState<number | null>(null)` for open index
+- `AnimatePresence` for height animation
+- ChevronDown rotates 180° on open
 - Items separated by `border-bottom: 1px solid rgba(226,228,233,0.7)`
-- Question hover: color → `var(--gold)`
-- ChevronDown icon rotates 180° on open
-- Answer height animates via `AnimatePresence`
 
 ---
 
-### §6 · Lead Capture — Dark Navy Form Container
+## 5 · TCPA Compliance Funnel (CRITICAL)
 
 > [!CAUTION]
-> This is the **money section**. Every detail of the multi-step form must be replicated precisely.
+> **The TCPA disclaimer placement is a legal and conversion architecture decision. Do NOT deviate.**
 
-#### 6A · Navy Container
+### 5A · Hero Zip Code Form (Low Friction)
+- Only captures: `zipCode`
+- Compliance: Only `🔒 Secure & Private · Privacy Policy · Terms` link
+- **NO long legal disclaimer** — this reduces cognitive load at the top of the funnel
 
-```css
-.form-navy-container {
-  background: #1A233A;
-  border-radius: 20px;
-  padding: 64px 64px 80px;     /* desktop */
-  box-shadow: var(--shadow-form-heavy);
-  max-width: 56rem;
-}
-```
+### 5B · Bottom Lead Capture Form — Multi-Step Wizard
 
-Inside: centered kicker → h2 (white) → subtitle → `<LeadCaptureForm />` → response verbiage.
+| Step | Fields | Compliance |
+|------|--------|------------|
+| 1 | `zipCode`, `coverageType`, `dateOfBirth`, conditional `familyDetails` | None — low friction |
+| 2 | `primaryGoal` (optional), `notes` (optional) | None — low friction |
+| 3 | `firstName`, `lastName`, `email`, `phone` | **FULL TCPA consent checkbox + legal paragraph** |
 
-#### 6B · `LeadCaptureForm` Component — Multi-Step React State Machine
+**The full TCPA consent text MUST appear ONLY on Step 3** where the phone number is collected:
 
-```tsx
-function LeadCaptureForm() {
-  const [step, setStep] = useState(1);
-  const [form, setForm] = useState({ /* all fields */ });
-  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
-  const [errorMsg, setErrorMsg] = useState("");
-  // ...
-}
-```
+> "I agree to the Privacy Policy and Terms of Service, and I consent to receive calls and text messages from [CLIENT_NAME] regarding my insurance inquiry at the number provided. Consent is not a condition of purchase."
 
-**Form State Fields:**
-```ts
-{
-  firstName: "",
-  lastName: "",
-  dateOfBirth: "",
-  zipCode: "",
-  email: "",
-  phone: "",
-  coverageType: "",
-  primaryGoal: "",
-  familyDetails: "",
-  notes: "",
-  tcpaConsent: false,
-  website: "",  // ← HONEYPOT (hidden, position: absolute, left: -9999px)
-}
-```
-
-**Step Flow:**
-
-| Step | Title | Fields | Validation |
-|------|-------|--------|------------|
-| 1 | Zip & Demographic | `zipCode` (5 digits), `coverageType` (select), `dateOfBirth` (date). Conditional: if coverageType === "Family" → reveal `familyDetails` with AnimatePresence. | `canAdvanceStep1 = zipCode.length === 5 && coverageType !== "" && (coverageType !== "Family" \|\| familyDetails.trim() !== "")` |
-| 2 | Notes & Goals | `primaryGoal` (select, optional), `notes` (textarea, optional) | Always valid |
-| 3 | Contact + Submit | `firstName`, `lastName`, `email`, `phone`, TCPA checkbox | All required + TCPA consent |
-
-**Step Transition Animation:**
-```tsx
-<AnimatePresence mode="wait">
-  {step === N && (
-    <motion.div
-      key="step-N"
-      initial={{ opacity: 0, x: 20 }}
-      animate={{ opacity: 1, x: 0 }}
-      exit={{ opacity: 0, x: -20 }}
-      transition={{ duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
-    >
-      {/* step content */}
-    </motion.div>
-  )}
-</AnimatePresence>
-```
-
-**UI Components within form:**
-- **Step indicator**: "Step N of 3" in gold uppercase
-- **Progress bar**: 3 segments, `.form-progress-segment.active` turns gold
-- **Nav row**: "← Back" ghost button + "Next →" gold button (or "Get My Free Quote →" on step 3)
-- **Loading state**: spinner + "Securing..." text, button disabled
-- **Success state**: checkmark emoji → "Quote Request Received." → trust anchor
-
-**TCPA Consent Block:**
-- Checkbox + legal text linking to `/privacy` and `/terms`
-- Text: "I agree to the Privacy Policy and Terms of Service, and I consent to receive calls and text messages from [CLIENT_NAME] regarding my insurance inquiry..."
-
-**Always-visible compliance footer:**
+**Always-visible compliance footer (across all steps):**
 - `🔒 256-Bit Secure. Zero Spam Guarantee.`
-- Legal micro-copy: "Your info stays with me. Never sold. Never shared..."
-
-#### 6C · Form Styling
-
-```css
-.lead-form {
-  max-width: 640px;
-  background: #FFFFFF;
-  border-radius: 28px;
-  padding: 56px;
-  border: 1px solid rgba(226, 228, 233, 0.6);
-}
-
-.form-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 24px;
-}
-
-.form-field input, .form-field select {
-  padding: 18px 22px;
-  border-radius: 14px;
-  background: #F8F9FB;
-  border: 1.5px solid rgba(226, 228, 233, 0.8);
-  /* focus: border-color: var(--gold) + gold ring */
-}
-```
+- `"Your info stays with me. Never sold. Never shared. Never fed into an auto-dialer."`
 
 ---
 
-### §7 · Footer
+## 6 · API Webhook Pipeline (`/api/lead/route.ts`)
 
+### 6A · Architecture
+
+```ts
+import { NextRequest, NextResponse } from "next/server";
+
+export async function POST(req: NextRequest) {
+  try {
+    const data = await req.json();
+
+    const webhookUrl = process.env.ZAPIER_WEBHOOK_URL;
+    if (!webhookUrl) {
+      console.error("❌ ZAPIER_WEBHOOK_URL is missing – set it in .env.local");
+      throw new Error("ZAPIER_WEBHOOK_URL is not configured — check .env.local");
+    }
+
+    // ── Normalize phone to (XXX) XXX-XXXX ──
+    const cleanPhone = data.phone.replace(/\D/g, "").slice(-10);
+    const formattedPhone = cleanPhone.replace(
+      /(\d{3})(\d{3})(\d{4})/,
+      "($1) $2-$3"
+    );
+    const payload = { ...data, phone: formattedPhone };
+
+    // ── Forward payload to Zapier ──
+    console.log("Webhook Payload:", JSON.stringify(payload, null, 2));
+
+    try {
+      const webhookResponse = await fetch(webhookUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      if (!webhookResponse.ok) {
+        console.error(`Webhook responded with status ${webhookResponse.status}`);
+        return NextResponse.json(
+          { error: "Failed to process your request. Please try again." },
+          { status: 502 }
+        );
+      }
+    } catch (webhookError) {
+      console.error("Webhook Error:", webhookError);
+      return NextResponse.json(
+        { error: "Failed to process your request. Please try again." },
+        { status: 502 }
+      );
+    }
+
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error("Lead API error:", error);
+    return NextResponse.json(
+      { error: "An unexpected error occurred." },
+      { status: 500 }
+    );
+  }
+}
 ```
-<footer class="site-footer">         ← bg: var(--ink)
-  <div class="footer-inner">         ← max-width: 1120px, centered column
-    .footer-brand → logo + tagline
-    Contact line → email link (gold)
-    .footer-links → email | Privacy | Terms
-    .footer-legal → © year + legal disclaimer
-    Legal Safe Harbor paragraph        ← 11px, half-opacity
-  </div>
-</footer>
-```
 
----
+### 6B · Pipeline Rules (Non-Negotiable)
 
-## 4 · API Webhook Pipeline (`/api/lead/route.ts`)
+| Rule | Detail |
+|---|---|
+| Env var | Must be named `ZAPIER_WEBHOOK_URL` |
+| Destination | **Always a Zapier Catch Hook** — never a direct CRM endpoint |
+| Phone format | `(XXX) XXX-XXXX` — strip non-digits, take last 10, format |
+| Logging | `console.log` payload before send, `console.error` on failure |
+| Error handling | Outer try/catch (500) + inner try/catch for webhook (502) |
+| Honeypot | `website` field in payload; Zapier filter halts when `website !== ""` |
 
-```
-src/app/api/lead/route.ts
-```
+### 6C · Handover Documentation (`ZAPIER_SETUP.md`)
 
-**Architecture:**
-1. Next.js Route Handler: `export async function POST(req: NextRequest)`
-2. Outer try/catch for general errors
-3. Read `process.env.ZAPIER_WEBHOOK_URL` — this is always a **Zapier Catch Hook** URL
-4. **Phone Formatting (MANDATORY):** Before building the payload, intercept `data.phone`, strip all non-numeric characters, and format it strictly as `(XXX) XXX-XXXX`:
-   ```ts
-   const clean = data.phone.replace(/\D/g, '').slice(-10);
-   const formattedPhone = clean.replace(/(\d{3})(\d{3})(\d{4})/, '($1) $2-$3');
-   ```
-5. Build payload: `{ ...body, phone: formattedPhone, source: "[client]-website", submittedAt: new Date().toISOString() }`
-6. Log payload: `console.log("Webhook Payload:", payload)`
-7. Inner try/catch for webhook dispatch — returns 502 on failure
-8. Return `{ success: true }` on success, structured error objects on failure
-
-**Key Rules:**
-- The env var **must** be named `ZAPIER_WEBHOOK_URL`. The destination is always a Zapier Catch Hook — never a direct CRM endpoint.
-- The phone number **must** be formatted as `(XXX) XXX-XXXX` before it leaves the server. Zapier actions downstream expect this exact format.
-- Honeypot field (`website`) is in the payload but the Zapier filter should be configured to halt the Zap when `website !== ""`.
-- Always tag submissions with `source` and `submittedAt` for attribution.
-
-### 4B · Handover Documentation (`ZAPIER_SETUP.md`)
-
-During the build process, generate a `ZAPIER_SETUP.md` file in the project root. This file instructs the agency owner how to wire the Zapier Catch Hook to downstream actions.
-
-**Required contents of `ZAPIER_SETUP.md`:**
+During the build, generate `ZAPIER_SETUP.md` in the project root with this exact template:
 
 ````markdown
 # Zapier Webhook Setup Guide
@@ -546,12 +463,14 @@ During the build process, generate a `ZAPIER_SETUP.md` file in the project root.
 ## Action 1 — Google Sheets (Batch CSV)
 - **App:** Google Sheets → Create Spreadsheet Row
 - **Spreadsheet:** Create a sheet named "Website Leads"
-- **Headers (Row 1):** `First Name` | `Last Name` | `Phone` | `Email` | `Notes`
+- **Headers (Row 1):** `First Name` | `Last Name` | `Phone` | `Email` | `Zip` | `Coverage Type` | `Notes` | `Submitted At`
 - **Field Mapping:**
   - First Name → `{{firstName}}`
   - Last Name → `{{lastName}}`
   - Phone → `{{phone}}` (pre-formatted as (XXX) XXX-XXXX)
   - Email → `{{email}}`
+  - Zip → `{{zipCode}}`
+  - Coverage Type → `{{coverageType}}`
   - Notes → `{{notes}}`
 
 ## Action 2 — Telegram Bot (Primary Push Notification)
@@ -564,6 +483,7 @@ During the build process, generate a `ZAPIER_SETUP.md` file in the project root.
   Name: {{firstName}} {{lastName}}
   Phone: {{phone}}
   Email: {{email}}
+  Zip: {{zipCode}}
   Coverage: {{coverageType}}
   Notes: {{notes}}
   ```
@@ -583,7 +503,7 @@ During the build process, generate a `ZAPIER_SETUP.md` file in the project root.
 
 ---
 
-## 5 · Layout (`layout.tsx`)
+## 7 · Layout (`layout.tsx`)
 
 ```tsx
 import { Inter } from "next/font/google";
@@ -601,17 +521,17 @@ const inter = Inter({ subsets: ["latin"], display: "swap", variable: "--font-int
 
 ---
 
-## 6 · Responsive Breakpoint Stack
+## 8 · Responsive Breakpoint Stack
 
 | Breakpoint | Key Changes |
 |---|---|
-| `≤1024px` | Hero grid → 1 column, headshot moves to top (`order: -1`). Trust cards → 1 column. |
-| `≤768px` | Hide header nav. h1 → 36px, h2 → 30px. Form grid → 1 column. FAQ font sizes reduce. |
-| `≤640px` | Hero padding shrinks. CTA buttons → full width. Footer links → vertical stack. Zip input stacks vertically in hero pill. |
+| `≤1024px` (lg) | Hero flex: `flex-col-reverse` stacks text above headshot. Trust cards → 1 column. |
+| `≤768px` (md) | Hide header nav. Logo shrinks 20%. CTA button shrinks. h1 → 36px, h2 → 30px. Form grid → 1 column. |
+| `≤640px` (sm) | CTA buttons → full width. Zip form input/button stack vertically. Footer links → vertical stack. |
 
 ---
 
-## 7 · New Client Adaptation Checklist
+## 9 · New Client Adaptation Checklist
 
 When deploying for a new broker client, follow this exact sequence:
 
@@ -621,42 +541,42 @@ When deploying for a new broker client, follow this exact sequence:
 - [ ] Replace carrier logos in `/public/logos/`
 
 ### Step 2 — Content Swap
-- [ ] Replace `headlineWords` + `headlineGoldWords` arrays
-- [ ] Rewrite hero subhead paragraph
-- [ ] Update `trustBadges`, `trustCards`, `trustProofItems` data arrays
-- [ ] Rewrite `steps` array (process cards)
-- [ ] Rewrite `testimonials` array
-- [ ] Rewrite `faqs` array
-- [ ] Update `licensedStates` array
-- [ ] Update `carrierLogos` array with new carrier SVGs
+- [ ] Replace `headlineWords` + `headlineAccentWords` arrays
+- [ ] Rewrite hero subhead (≤2 sentences, punchy)
+- [ ] Update `trustBadges` (use "Broker — Access to Multiple Carriers" pattern)
+- [ ] Update `trustCards`, `trustProofItems`, `steps`, `testimonials`, `faqs`, `licensedStates`, `carrierLogos` data arrays
 
 ### Step 3 — Legal & Compliance
-- [ ] Update TCPA consent text with new client name
+- [ ] Update TCPA consent text with new client name (Step 3 of bottom form ONLY)
 - [ ] Update footer contact info, email, and legal safe harbor language
 - [ ] Create `/privacy` and `/terms` pages with client-specific policies
 
 ### Step 4 — API Pipeline & Zapier
 - [ ] Create a Zapier Catch Hook and set `ZAPIER_WEBHOOK_URL` in `.env.local`
 - [ ] Verify phone formatting outputs `(XXX) XXX-XXXX` in the webhook payload
-- [ ] Update `source` tag in `route.ts` payload
-- [ ] Generate `ZAPIER_SETUP.md` from the template in Section 4B
+- [ ] Generate `ZAPIER_SETUP.md` from the template in Section 6C
 - [ ] Walk the client through the 3 Zapier actions (Sheets, Telegram, Gmail)
 
 ### Step 5 — SEO & Deploy
 - [ ] Update `metadata` in `layout.tsx` (title, description, OG, canonical)
-- [ ] Deploy to Vercel (or equivalent)
+- [ ] Deploy to Vercel
 - [ ] Verify webhook fires correctly in production
 
 ---
 
-## 8 · Anti-Patterns — DO NOT
+## 10 · Anti-Patterns — DO NOT
 
+- ❌ **Do NOT use white text on gold buttons** — fails WCAG AA. Always `color: #1A233A` on gold backgrounds.
+- ❌ **Do NOT use gold text on white/Alabaster backgrounds** — fails WCAG AA (2.1:1). Use navy text with gold highlight bg instead.
+- ❌ **Do NOT use `border-radius: 12px` on CTA buttons** — must be `100px` (full pill).
+- ❌ **Do NOT put the full TCPA legal paragraph in the hero zip form** — it kills conversion. Only `🔒 Secure & Private · Privacy · Terms` links.
 - ❌ **Do NOT use `tailwind.config.js`** — all tokens live in `@theme inline`
 - ❌ **Do NOT use any easing curve other than `[0.25, 0.46, 0.45, 0.94]`** — this is the Alpine Fluidity signature
-- ❌ **Do NOT split the page into multiple route files** — it is a single-page SPA with anchor navigation
-- ❌ **Do NOT remove the honeypot field** — it is the primary bot protection layer
-- ❌ **Do NOT skip the TCPA consent checkbox** — it is legally required for insurance lead gen
-- ❌ **Do NOT use `motion.div` without `as const` on ease arrays** — TypeScript will reject the Variants type
-- ❌ **Do NOT send leads to a direct CRM endpoint** — all leads route through a Zapier Catch Hook via `ZAPIER_WEBHOOK_URL`
-- ❌ **Do NOT skip phone formatting** — every phone number must be formatted as `(XXX) XXX-XXXX` before it leaves `route.ts`
-- ❌ **Do NOT remove the `aria-hidden` wrapper** from cloned marquee elements — screen readers must not double-read
+- ❌ **Do NOT split the page into multiple route files** — single-page SPA with anchor navigation
+- ❌ **Do NOT remove the honeypot field** — primary bot protection layer
+- ❌ **Do NOT skip the TCPA consent checkbox on Step 3** — legally required for insurance lead gen
+- ❌ **Do NOT use `motion.div` without `as const` on ease arrays** — TypeScript rejects the Variants type
+- ❌ **Do NOT send leads to a direct CRM endpoint** — all leads route through Zapier Catch Hook
+- ❌ **Do NOT skip phone formatting** — every phone must be `(XXX) XXX-XXXX` before leaving `route.ts`
+- ❌ **Do NOT remove `aria-hidden` wrappers** from cloned marquee elements — screen readers must not double-read
+- ❌ **Do NOT use `flex-col` on trust badges** — icon+text must stay inline via `flex-row` with `shrink-0` on the icon and `whitespace-nowrap` on the text
