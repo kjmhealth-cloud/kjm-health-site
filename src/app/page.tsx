@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Script from "next/script";
 
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -1396,6 +1397,30 @@ export default function Home() {
             program, or any specific insurance carrier. Availability, benefits,
             and pricing vary by state.
           </p>
+
+          {/* LinkedIn Profile Badge */}
+          <div style={{ display: "flex", justifyContent: "center", marginTop: 24 }}>
+            <div
+              className="badge-base LI-profile-badge"
+              data-locale="en_US"
+              data-size="medium"
+              data-theme="light"
+              data-type="VERTICAL"
+              data-vanity="kyle-miller-424b773b5"
+              data-version="v1"
+            >
+              <a
+                className="badge-base__link LI-simple-link"
+                href="https://www.linkedin.com/in/kyle-miller-424b773b5?trk=profile-badge"
+              >
+                Kyle Miller
+              </a>
+            </div>
+          </div>
+          <Script
+            src="https://platform.linkedin.com/badges/js/profile.js"
+            strategy="lazyOnload"
+          />
         </div>
       </footer>
     </>
