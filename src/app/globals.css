@@ -290,7 +290,7 @@ figcaption,
 
 /* ──────────────────────────────────────────────
    SECTION 1 — HERO
-   Navy-to-white gradient with white-space breathing room
+   Solid navy with subtle radial glow
    ────────────────────────────────────────────── */
 
 .hero-section {
@@ -301,15 +301,24 @@ figcaption,
   overflow: hidden;
   padding-top: clamp(80px, 8vh, 120px);
   color: #FFFFFF;
+  background: var(--color-navy);
+}
 
-  /* FIXED: Gradient dissolves navy into the white page below.
-     Removes the hard "navy box on white" edge. */
-  background:
-    linear-gradient(to bottom,
-      var(--color-navy) 0%,
-      var(--color-navy) 60%,
-      var(--color-navy-light) 78%,
-      var(--color-off-white) 100%);
+.hero-section::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 35%;
+  transform: translate(-50%, -50%);
+  width: 800px;
+  height: 600px;
+  background: radial-gradient(ellipse at center,
+      rgba(19, 45, 84, 0.8) 0%,
+      rgba(10, 31, 63, 0.4) 40%,
+      transparent 70%);
+  filter: blur(60px);
+  pointer-events: none;
+  z-index: 0;
 }
 
 /* Override heading/text colors in navy hero */
@@ -494,12 +503,16 @@ figcaption,
 
 /* Inverted CTA inside navy sections */
 .hero-section .btn-cta {
-  background: #FFFFFF;
-  color: var(--color-navy);
+  background: #22C55E;
+  color: #FFFFFF;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  box-shadow: 0 2px 12px rgba(34, 197, 94, 0.35);
 }
 
 .hero-section .btn-cta:hover {
-  background: var(--color-off-white);
+  background: #16A34A;
+  box-shadow: 0 4px 20px rgba(34, 197, 94, 0.45);
 }
 
 /* ── Hero Inline Form ── */

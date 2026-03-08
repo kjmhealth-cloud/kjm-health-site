@@ -128,18 +128,18 @@ const stepSlide = {
 
 const trustBadges = [
   {
-    icon: "🔐",
+    icon: "✓",
     title: "Licensed in 26+ States",
     description: "Not a side hustle. Fully credentialed, coast to coast.",
   },
   {
-    icon: "⚖️",
-    title: "Broker — Access to Multiple Carriers",
+    icon: "✓",
+    title: "Independent Broker",
     description: "No carrier owns me. I answer to you.",
   },
   {
-    icon: "📵",
-    title: "Zero Spam. Ever.",
+    icon: "✓",
+    title: "Zero Spam Guarantee",
     description: "Your phone number stays with me. That\u2019s it.",
   },
 ];
@@ -871,8 +871,13 @@ export default function Home() {
                     variants={badgeItem}
                     className="flex flex-row items-center gap-2"
                   >
-                    <span className="text-xl leading-none shrink-0">{badge.icon}</span>
-                    <span className="font-semibold text-sm text-white whitespace-nowrap">
+                    <span
+                      className="shrink-0 flex items-center justify-center w-5 h-5 rounded-full text-xs font-bold"
+                      style={{ background: "rgba(34, 197, 94, 0.2)", color: "#22C55E" }}
+                    >
+                      {badge.icon}
+                    </span>
+                    <span className="font-medium text-sm text-white/90 whitespace-nowrap">
                       {badge.title}
                     </span>
                   </motion.div>
@@ -893,7 +898,7 @@ export default function Home() {
                     pattern="[0-9]{5}"
                     maxLength={5}
                     placeholder="Enter Zip Code"
-                    className="flex-1 h-12 px-4 rounded border border-white/40 bg-white text-[var(--color-navy)] placeholder:text-gray-400 focus:ring-2 focus:ring-[var(--color-focus-ring)] focus:outline-none text-lg"
+                    className="flex-1 h-12 px-4 rounded border border-white/30 bg-white text-[var(--color-navy)] placeholder:text-gray-400 focus:ring-2 focus:ring-white/40 focus:border-white/60 focus:outline-none text-lg"
                     aria-label="Zip code"
                     value={zipCode}
                     onChange={(e) => setZipCode(e.target.value.replace(/\D/g, ""))}
@@ -912,7 +917,7 @@ export default function Home() {
                 </div>
 
                 {/* Compact compliance line */}
-                <div className="mt-3 text-xs text-white/75 text-center sm:text-left">
+                <div className="mt-3 text-xs text-white/80 text-center sm:text-left">
                   🔒 Secure &amp; Private ·{" "}
                   <Link href="/privacy" className="underline hover:text-white">Privacy Policy</Link>{" "}
                   ·{" "}
@@ -921,7 +926,6 @@ export default function Home() {
               </motion.div>
             </div>
 
-            {/* Right Side: Professional Headshot */}
             <motion.div
               variants={fadeUp}
               initial="hidden"
@@ -929,18 +933,13 @@ export default function Home() {
               custom={0.5}
               className="relative w-full lg:w-2/5 flex justify-center lg:justify-end mt-12 lg:mt-0"
             >
-              {/* Warm Gold Background Wash */}
+              {/* Headshot Image — Clean Circle Crop */}
               <div
-                className="gold-haze-animate absolute top-1/2 left-1/2 lg:left-auto lg:right-[8%] -translate-x-1/2 lg:translate-x-0 -translate-y-1/2 w-[320px] md:w-[420px] h-[320px] md:h-[420px] rounded-full pointer-events-none z-0"
+                className="relative w-[240px] md:w-[280px] h-[280px] md:h-[320px] overflow-hidden shrink-0 z-20"
                 style={{
-                  background: "radial-gradient(circle, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.03) 40%, transparent 70%)",
-                  filter: "blur(80px)",
+                  borderRadius: "50%",
+                  boxShadow: "0 8px 40px rgba(0, 0, 0, 0.35), 0 2px 12px rgba(0, 0, 0, 0.2)",
                 }}
-              />
-
-              {/* Headshot Image in Organic Blob */}
-              <div
-                className="blob-mask relative w-[240px] md:w-[280px] h-[280px] md:h-[320px] overflow-hidden shrink-0 z-20"
               >
                 <img
                   src="/kyle-headshot.jpg"
