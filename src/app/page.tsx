@@ -93,8 +93,8 @@ const staggerItem = {
 };
 
 /* Word-by-word cinematic headline reveal */
-const headlineWords = ["Expert", "Insurance", "Advice", "from", "Someone", "Who"];
-const headlineAccentWords = ["Actually", "Answers", "the", "Phone."];
+const headlineWords = ["Expert", "Health", "Insurance."];
+const headlineAccentWords = ["Coverage", "without", "the", "complexity."];
 
 const wordVariant = {
   hidden: { opacity: 0, y: 20, filter: "blur(4px)" },
@@ -802,154 +802,164 @@ export default function Home() {
 
       {/* ═══════════════════════════════════════
           SECTION 1 — HERO
+          Full-bleed navy→white gradient — no blocky edges
           ═══════════════════════════════════════ */}
-      <section className="hero-section px-6 md:px-12 pt-24 pb-16 max-w-7xl mx-auto">
-        <div className="flex flex-col-reverse lg:flex-row items-center justify-between gap-12 lg:gap-20">
+      <section className="hero-section">
+        <div
+          style={{
+            maxWidth: 1120,
+            margin: "0 auto",
+            padding: "0 24px",
+            width: "100%",
+          }}
+        >
+          <div className="flex flex-col-reverse lg:flex-row items-center justify-between gap-12 lg:gap-20">
 
-          {/* Left Side: Text and Form */}
-          <div className="flex flex-col gap-8 w-full lg:w-3/5 text-center lg:text-left">
-            {/* Cinematic word-by-word headline */}
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight" style={{ textWrap: "balance" }}>
-              {headlineWords.map((word, i) => (
-                <motion.span
-                  key={word}
-                  variants={wordVariant}
-                  initial="hidden"
-                  animate="visible"
-                  custom={i}
-                  className="inline-block mr-[0.3em]"
-                >
-                  {word}
-                </motion.span>
-              ))}
-              <br className="hidden md:block" />
-              {headlineAccentWords.map((word, i) => (
-                <motion.span
-                  key={word}
-                  variants={wordVariant}
-                  initial="hidden"
-                  animate="visible"
-                  custom={headlineWords.length + i}
-                  className="inline-block mr-[0.3em] text-[#1A233A] bg-[rgba(197,160,89,0.12)] px-1 rounded"
-                >
-                  {word}
-                </motion.span>
-              ))}
-            </h1>
+            {/* Left Side: Text and Form */}
+            <div className="flex flex-col gap-8 w-full lg:w-3/5 text-center lg:text-left">
+              {/* Cinematic word-by-word headline */}
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight" style={{ textWrap: "balance" }}>
+                {headlineWords.map((word, i) => (
+                  <motion.span
+                    key={word}
+                    variants={wordVariant}
+                    initial="hidden"
+                    animate="visible"
+                    custom={i}
+                    className="inline-block mr-[0.3em]"
+                  >
+                    {word}
+                  </motion.span>
+                ))}
+                <br className="hidden md:block" />
+                {headlineAccentWords.map((word, i) => (
+                  <motion.span
+                    key={word}
+                    variants={wordVariant}
+                    initial="hidden"
+                    animate="visible"
+                    custom={headlineWords.length + i}
+                    className="inline-block mr-[0.3em] text-white bg-white/10 px-1 rounded"
+                  >
+                    {word}
+                  </motion.span>
+                ))}
+              </h1>
 
-            <motion.p
+              <motion.p
+                variants={fadeUp}
+                initial="hidden"
+                animate="visible"
+                custom={0.7}
+                className="text-lg md:text-xl leading-relaxed max-w-2xl mx-auto lg:mx-0 text-white/85"
+              >
+                Licensed, independent health insurance broker covering 30+
+                states. Honest guidance, zero pressure.
+                Coverage without the complexity.
+              </motion.p>
+
+              {/* Horizontal Trust Bar (Wraps on mobile) */}
+              <motion.div
+                variants={badgeContainer}
+                initial="hidden"
+                animate="visible"
+                className="flex flex-row flex-wrap justify-center lg:justify-start items-center gap-x-6 gap-y-3 mt-4"
+              >
+                {trustBadges.map((badge) => (
+                  <motion.div
+                    key={badge.title}
+                    variants={badgeItem}
+                    className="flex flex-row items-center gap-2"
+                  >
+                    <span className="text-xl leading-none shrink-0">{badge.icon}</span>
+                    <span className="font-semibold text-sm text-white whitespace-nowrap">
+                      {badge.title}
+                    </span>
+                  </motion.div>
+                ))}
+              </motion.div>
+
+              <motion.div
+                variants={fadeUp}
+                initial="hidden"
+                animate="visible"
+                custom={0.9}
+                className="hero-inline-form mt-6 bg-white/10 p-4 rounded border border-white/20"
+              >
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <input
+                    type="text"
+                    inputMode="numeric"
+                    pattern="[0-9]{5}"
+                    maxLength={5}
+                    placeholder="Enter Zip Code"
+                    className="flex-1 h-12 px-4 rounded border border-gray-300 focus:ring-2 focus:ring-[var(--color-focus-ring)] focus:outline-none text-lg"
+                    aria-label="Zip code"
+                    value={zipCode}
+                    onChange={(e) => setZipCode(e.target.value.replace(/\D/g, ""))}
+                    onKeyDown={(e) => e.key === "Enter" && handleHeroSubmit()}
+                  />
+                  <motion.button
+                    type="button"
+                    className="btn-cta h-12 whitespace-nowrap disabled:opacity-50"
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={handleHeroSubmit}
+                    disabled={loading || zipCode.length !== 5}
+                  >
+                    {loading ? "Securing..." : "Get My Quote \u2192"}
+                  </motion.button>
+                </div>
+
+                {/* Compact compliance line */}
+                <div className="mt-3 text-xs text-white/60 text-center sm:text-left">
+                  🔒 Secure &amp; Private ·{" "}
+                  <Link href="/privacy" className="underline hover:text-white">Privacy Policy</Link>{" "}
+                  ·{" "}
+                  <Link href="/terms" className="underline hover:text-white">Terms</Link>
+                </div>
+              </motion.div>
+            </div>
+
+            {/* Right Side: Professional Headshot */}
+            <motion.div
               variants={fadeUp}
               initial="hidden"
               animate="visible"
-              custom={0.7}
-              className="text-lg md:text-xl leading-relaxed max-w-2xl mx-auto lg:mx-0 text-[#333333]"
+              custom={0.5}
+              className="relative w-full lg:w-2/5 flex justify-center lg:justify-end mt-12 lg:mt-0"
             >
-              Licensed, independent health insurance broker covering 30+
-              states. Honest guidance, zero pressure &mdash; from someone
-              who picks up the phone.
-            </motion.p>
+              {/* Warm Gold Background Wash */}
+              <div
+                className="gold-haze-animate absolute top-1/2 left-1/2 lg:left-auto lg:right-[8%] -translate-x-1/2 lg:translate-x-0 -translate-y-1/2 w-[320px] md:w-[420px] h-[320px] md:h-[420px] rounded-full pointer-events-none z-0"
+                style={{
+                  background: "radial-gradient(circle, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.03) 40%, transparent 70%)",
+                  filter: "blur(80px)",
+                }}
+              />
 
-            {/* Horizontal Trust Bar (Wraps on mobile) */}
-            <motion.div
-              variants={badgeContainer}
-              initial="hidden"
-              animate="visible"
-              className="flex flex-row flex-wrap justify-center lg:justify-start items-center gap-x-6 gap-y-3 mt-4"
-            >
-              {trustBadges.map((badge) => (
-                <motion.div
-                  key={badge.title}
-                  variants={badgeItem}
-                  className="flex flex-row items-center gap-2"
-                >
-                  <span className="text-xl leading-none shrink-0">{badge.icon}</span>
-                  <span className="font-semibold text-sm text-[var(--ink)] whitespace-nowrap">
-                    {badge.title}
-                  </span>
-                </motion.div>
-              ))}
-            </motion.div>
+              {/* Gold Border Ring (behind the blob) */}
+              <div
+                className="blob-mask absolute top-1/2 left-1/2 lg:left-auto lg:right-[calc(8%+10px)] -translate-x-1/2 lg:translate-x-0 -translate-y-1/2 w-[252px] md:w-[292px] h-[292px] md:h-[332px] pointer-events-none z-10"
+                style={{
+                  background: "linear-gradient(135deg, rgba(255,255,255,0.15), rgba(255,255,255,0.03))",
+                  filter: "blur(2px)",
+                }}
+              />
 
-            <motion.div
-              variants={fadeUp}
-              initial="hidden"
-              animate="visible"
-              custom={0.9}
-              className="hero-inline-form mt-6 bg-white/50 p-4 rounded-2xl border border-[var(--slate)]/20"
-            >
-              <div className="flex flex-col sm:flex-row gap-3">
-                <input
-                  type="text"
-                  inputMode="numeric"
-                  pattern="[0-9]{5}"
-                  maxLength={5}
-                  placeholder="Enter Zip Code"
-                  className="flex-1 h-12 px-4 rounded-full border border-gray-300 focus:ring-2 focus:ring-[var(--gold)] focus:outline-none text-lg"
-                  aria-label="Zip code"
-                  value={zipCode}
-                  onChange={(e) => setZipCode(e.target.value.replace(/\D/g, ""))}
-                  onKeyDown={(e) => e.key === "Enter" && handleHeroSubmit()}
+              {/* Headshot Image in Organic Blob */}
+              <div
+                className="blob-mask relative w-[240px] md:w-[280px] h-[280px] md:h-[320px] overflow-hidden shrink-0 z-20"
+              >
+                <img
+                  src="/kyle-headshot.jpg"
+                  alt="Kyle Miller — Licensed Independent Health Insurance Broker"
+                  className="w-full h-full object-cover object-top scale-105"
+                  loading="eager"
                 />
-                <motion.button
-                  type="button"
-                  className="btn-cta h-12 whitespace-nowrap disabled:opacity-50"
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={handleHeroSubmit}
-                  disabled={loading || zipCode.length !== 5}
-                >
-                  {loading ? "Securing..." : "Get My Quote \u2192"}
-                </motion.button>
-              </div>
-
-              {/* Compact compliance line */}
-              <div className="mt-3 text-xs text-[#6B7280] text-center sm:text-left">
-                🔒 Secure &amp; Private ·{" "}
-                <Link href="/privacy" className="underline hover:text-[var(--gold)]">Privacy Policy</Link>{" "}
-                ·{" "}
-                <Link href="/terms" className="underline hover:text-[var(--gold)]">Terms</Link>
               </div>
             </motion.div>
           </div>
-
-          {/* Right Side: Professional Headshot */}
-          <motion.div
-            variants={fadeUp}
-            initial="hidden"
-            animate="visible"
-            custom={0.5}
-            className="relative w-full lg:w-2/5 flex justify-center lg:justify-end mt-12 lg:mt-0"
-          >
-            {/* Warm Gold Background Wash */}
-            <div
-              className="gold-haze-animate absolute top-1/2 left-1/2 lg:left-auto lg:right-[8%] -translate-x-1/2 lg:translate-x-0 -translate-y-1/2 w-[320px] md:w-[420px] h-[320px] md:h-[420px] rounded-full pointer-events-none z-0"
-              style={{
-                background: "radial-gradient(circle, rgba(197,160,89,0.20) 0%, rgba(212,181,119,0.12) 40%, transparent 70%)",
-                filter: "blur(80px)",
-              }}
-            />
-
-            {/* Gold Border Ring (behind the blob) */}
-            <div
-              className="blob-mask absolute top-1/2 left-1/2 lg:left-auto lg:right-[calc(8%+10px)] -translate-x-1/2 lg:translate-x-0 -translate-y-1/2 w-[252px] md:w-[292px] h-[292px] md:h-[332px] pointer-events-none z-10"
-              style={{
-                background: "linear-gradient(135deg, rgba(197,160,89,0.25), rgba(197,160,89,0.05))",
-                filter: "blur(2px)",
-              }}
-            />
-
-            {/* Headshot Image in Organic Blob */}
-            <div
-              className="blob-mask relative w-[240px] md:w-[280px] h-[280px] md:h-[320px] overflow-hidden shrink-0 z-20"
-            >
-              <img
-                src="/kyle-headshot.jpg"
-                alt="Kyle Miller — Licensed Independent Health Insurance Broker"
-                className="w-full h-full object-cover object-top scale-105"
-                loading="eager"
-              />
-            </div>
-          </motion.div>
         </div>
       </section>
 
@@ -1033,7 +1043,7 @@ export default function Home() {
             <h2 className="section-headline">
               Somebody Who Knows Your Name.
               <br />
-              <span style={{ color: "var(--gold)" }}>And Answers When You Call.</span>
+              <span style={{ color: "var(--color-slate)" }}>Not Just Your Policy Number.</span>
             </h2>
           </FadeInOnScroll>
 
@@ -1050,7 +1060,7 @@ export default function Home() {
                 variants={staggerItem}
                 className="glass-card"
               >
-                <card.icon size={28} strokeWidth={1.5} style={{ color: "var(--gold)", marginBottom: 16 }} />
+                <card.icon size={28} strokeWidth={1.5} style={{ color: "var(--color-navy-muted)", marginBottom: 16 }} />
                 <h3 className="card-title">{card.title}</h3>
                 <p className="card-body">{card.body}</p>
               </motion.div>
@@ -1118,7 +1128,7 @@ export default function Home() {
       <section
         className="section-process"
         id="the-process"
-        style={{ background: "#FAF9F6" }}
+        style={{ background: "var(--color-off-white)" }}
       >
         <div
           className="section-container"
@@ -1236,15 +1246,61 @@ export default function Home() {
       </section>
 
       {/* ═══════════════════════════════════════
+          LINKEDIN CONNECT — Moved from footer into page body
+          White section for visual balance
+          ═══════════════════════════════════════ */}
+      <section className="linkedin-connect-section">
+        <div className="linkedin-connect-inner">
+          <FadeInOnScroll>
+            <span className="kicker">CONNECT</span>
+          </FadeInOnScroll>
+          <FadeInOnScroll delay={0.1}>
+            <h2 className="linkedin-connect-heading">
+              See My Track Record.
+            </h2>
+          </FadeInOnScroll>
+          <FadeInOnScroll delay={0.15}>
+            <p className="linkedin-connect-subtitle">
+              Real credentials. Real experience. Connect with me on LinkedIn
+              to see recommendations from clients and colleagues.
+            </p>
+          </FadeInOnScroll>
+          <FadeInOnScroll delay={0.2}>
+            <div className="linkedin-badge-wrapper">
+              <div
+                className="badge-base LI-profile-badge"
+                data-locale="en_US"
+                data-size="medium"
+                data-theme="light"
+                data-type="VERTICAL"
+                data-vanity="kyle-miller-424b773b5"
+                data-version="v1"
+              >
+                <a
+                  className="badge-base__link LI-simple-link"
+                  href="https://www.linkedin.com/in/kyle-miller-424b773b5?trk=profile-badge"
+                >
+                  Kyle Miller
+                </a>
+              </div>
+            </div>
+          </FadeInOnScroll>
+        </div>
+        <Script
+          src="https://platform.linkedin.com/badges/js/profile.js"
+          strategy="lazyOnload"
+        />
+      </section>
+
+      {/* ═══════════════════════════════════════
           SECTION 6 — LEAD CAPTURE FORM (Alpine Fluidity)
           ═══════════════════════════════════════ */}
       <section
         id="quote"
         style={{
           position: "relative",
-          marginTop: 64,
           paddingBottom: 0,
-          background: "#FAF9F6",
+          background: "var(--color-off-white)",
         }}
       >
         <div style={{ padding: "96px 24px 128px" }}>
@@ -1338,7 +1394,7 @@ export default function Home() {
       </section>
 
       {/* ═══════════════════════════════════════
-          SECTION 7 — FOOTER
+          SECTION 7 — FOOTER (Cleaned up — no LinkedIn badge)
           ═══════════════════════════════════════ */}
       <footer className="site-footer">
         <div className="footer-inner">
@@ -1361,7 +1417,7 @@ export default function Home() {
             Contact: Kyle Miller |{" "}
             <a
               href="mailto:kylelifeandhealth@gmail.com"
-              style={{ color: "var(--gold, #D4A843)", textDecoration: "underline" }}
+              style={{ color: "#FFFFFF", textDecoration: "underline" }}
             >
               kylelifeandhealth@gmail.com
             </a>
@@ -1397,30 +1453,6 @@ export default function Home() {
             program, or any specific insurance carrier. Availability, benefits,
             and pricing vary by state.
           </p>
-
-          {/* LinkedIn Profile Badge */}
-          <div style={{ display: "flex", justifyContent: "center", marginTop: 24 }}>
-            <div
-              className="badge-base LI-profile-badge"
-              data-locale="en_US"
-              data-size="medium"
-              data-theme="light"
-              data-type="VERTICAL"
-              data-vanity="kyle-miller-424b773b5"
-              data-version="v1"
-            >
-              <a
-                className="badge-base__link LI-simple-link"
-                href="https://www.linkedin.com/in/kyle-miller-424b773b5?trk=profile-badge"
-              >
-                Kyle Miller
-              </a>
-            </div>
-          </div>
-          <Script
-            src="https://platform.linkedin.com/badges/js/profile.js"
-            strategy="lazyOnload"
-          />
         </div>
       </footer>
     </>
