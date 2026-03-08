@@ -16,13 +16,13 @@ const montserrat = Montserrat({
 });
 
 export const metadata: Metadata = {
-  title: "Health Insurance Broker — 30+ States | KJM Health",
+  title: "Health Insurance Broker — 26+ States | KJM Health",
   description:
-    "Get a free, personalized health insurance quote from Kyle Miller — a licensed independent broker in 30+ states. Marketplace and private plans compared. No spam, no call centers.",
+    "Get a free, personalized health insurance quote from Kyle Miller — a licensed independent broker in 26+ states. Marketplace and private plans compared. No spam, no call centers.",
   openGraph: {
-    title: "KJM Health — One Broker. 30+ States. The Right Plan.",
+    title: "KJM Health — One Broker. 26+ States. The Right Plan.",
     description:
-      "Licensed independent health insurance broker comparing Marketplace and private plans across 30+ states. Free quotes, zero spam.",
+      "Licensed independent health insurance broker comparing Marketplace and private plans across 26+ states. Free quotes, zero spam.",
     type: "website",
     url: "https://kylecoverage.com",
   },

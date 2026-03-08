@@ -129,7 +129,7 @@ const stepSlide = {
 const trustBadges = [
   {
     icon: "🔐",
-    title: "Licensed in 30+ States",
+    title: "Licensed in 26+ States",
     description: "Not a side hustle. Fully credentialed, coast to coast.",
   },
   {
@@ -147,8 +147,8 @@ const trustBadges = [
 const trustCards = [
   {
     icon: ShieldCheck,
-    title: "30+ State Licensing",
-    body: "I hold active health insurance licenses across 30+ states. Not a technicality \u2014 it means I know the carriers, the regulations, and the plan options in your zip code. When I recommend something, it\u2019s because I\u2019ve done the homework on your specific market.",
+    title: "26+ State Licensing",
+    body: "I hold active health insurance licenses across 26+ states. Not a technicality \u2014 it means I know the carriers, the regulations, and the plan options in your zip code. When I recommend something, it\u2019s because I\u2019ve done the homework on your specific market.",
   },
   {
     icon: Scale,
@@ -231,7 +231,7 @@ const faqs = [
   },
   {
     q: "What states do you cover?",
-    a: "30+ and counting. Drop your info in the form and I\u2019ll confirm if your state\u2019s on the list \u2014 usually within a few hours.",
+    a: "26+ and counting. Drop your info in the form and I\u2019ll confirm if your state\u2019s on the list \u2014 usually within a few hours.",
   },
   {
     q: "What happens after I enroll?",
@@ -248,7 +248,7 @@ const licensedStates = [
 ];
 
 const trustProofItems = [
-  { icon: "🔐", text: "Licensed in 30+ States" },
+  { icon: "🔐", text: "Licensed in 26+ States" },
   { icon: "⚖️", text: "100% Independent" },
   { icon: "📵", text: "Zero Spam Guarantee" },
   { icon: "💰", text: "$0 Broker Fee" },
@@ -839,7 +839,7 @@ export default function Home() {
                     initial="hidden"
                     animate="visible"
                     custom={headlineWords.length + i}
-                    className="inline-block mr-[0.3em] text-white bg-white/10 px-1 rounded"
+                    className="inline-block mr-[0.3em] text-white"
                   >
                     {word}
                   </motion.span>
@@ -853,7 +853,7 @@ export default function Home() {
                 custom={0.7}
                 className="text-lg md:text-xl leading-relaxed max-w-2xl mx-auto lg:mx-0 text-white/85"
               >
-                Licensed, independent health insurance broker covering 30+
+                Licensed, independent health insurance broker covering 26+
                 states. Honest guidance, zero pressure.
                 Coverage without the complexity.
               </motion.p>
@@ -893,7 +893,7 @@ export default function Home() {
                     pattern="[0-9]{5}"
                     maxLength={5}
                     placeholder="Enter Zip Code"
-                    className="flex-1 h-12 px-4 rounded border border-gray-300 focus:ring-2 focus:ring-[var(--color-focus-ring)] focus:outline-none text-lg"
+                    className="flex-1 h-12 px-4 rounded border border-white/40 bg-white text-[var(--color-navy)] placeholder:text-gray-400 focus:ring-2 focus:ring-[var(--color-focus-ring)] focus:outline-none text-lg"
                     aria-label="Zip code"
                     value={zipCode}
                     onChange={(e) => setZipCode(e.target.value.replace(/\D/g, ""))}
@@ -912,7 +912,7 @@ export default function Home() {
                 </div>
 
                 {/* Compact compliance line */}
-                <div className="mt-3 text-xs text-white/60 text-center sm:text-left">
+                <div className="mt-3 text-xs text-white/75 text-center sm:text-left">
                   🔒 Secure &amp; Private ·{" "}
                   <Link href="/privacy" className="underline hover:text-white">Privacy Policy</Link>{" "}
                   ·{" "}
@@ -935,15 +935,6 @@ export default function Home() {
                 style={{
                   background: "radial-gradient(circle, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.03) 40%, transparent 70%)",
                   filter: "blur(80px)",
-                }}
-              />
-
-              {/* Gold Border Ring (behind the blob) */}
-              <div
-                className="blob-mask absolute top-1/2 left-1/2 lg:left-auto lg:right-[calc(8%+10px)] -translate-x-1/2 lg:translate-x-0 -translate-y-1/2 w-[252px] md:w-[292px] h-[292px] md:h-[332px] pointer-events-none z-10"
-                style={{
-                  background: "linear-gradient(135deg, rgba(255,255,255,0.15), rgba(255,255,255,0.03))",
-                  filter: "blur(2px)",
                 }}
               />
 
@@ -1401,7 +1392,7 @@ export default function Home() {
           <div className="footer-brand">
             <div className="footer-logo">KJM Health</div>
             <div className="footer-tagline">
-              Licensed Health Insurance Broker — 30+ States
+              Licensed Health Insurance Broker — 26+ States
             </div>
           </div>
 
