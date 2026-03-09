@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import Script from "next/script";
 
 import { motion, AnimatePresence } from "framer-motion";
@@ -786,7 +787,14 @@ export default function Home() {
       <header className="site-header">
         <div className="site-header-inner">
           <a href="#" className="header-logo">
-            <span className="header-logo-mark">K</span>
+            <Image
+              src="/kjm-logo.jpg"
+              alt="KJM Health logo"
+              width={36}
+              height={36}
+              className="header-logo-img"
+              priority
+            />
             KJM Health
           </a>
           <nav className="header-nav" aria-label="Page navigation">

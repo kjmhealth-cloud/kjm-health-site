@@ -218,19 +218,12 @@ figcaption,
   gap: 8px;
 }
 
-.header-logo-mark {
-  width: 32px;
-  height: 32px;
-  background: #FFFFFF;
+.header-logo-img {
+  width: 36px;
+  height: 36px;
   border-radius: 4px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--color-navy);
-  font-family: var(--font-heading);
-  font-size: 14px;
-  font-weight: 700;
-  letter-spacing: 0;
+  object-fit: contain;
+  flex-shrink: 0;
 }
 
 .btn-header-cta {
@@ -1892,10 +1885,9 @@ figcaption,
     gap: 6px;
   }
 
-  .header-logo-mark {
-    width: 26px;
-    height: 26px;
-    font-size: 12px;
+  .header-logo-img {
+    width: 28px;
+    height: 28px;
   }
 
   .btn-header-cta {
